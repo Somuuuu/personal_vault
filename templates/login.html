@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Login Page</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Main Body Styling */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #121212; /* Dark background color */
+            color: #e0e0e0; /* Light text color */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Login Container Styling */
+        .login-container {
+            background-color: #1e1e1e; /* Slightly lighter dark shade for the form */
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        /* Form Header */
+        .login-container h1 {
+            margin-bottom: 24px;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        /* Input Group Styling */
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #a0a0a0;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #333;
+            background-color: #2c2c2c;
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #4a90e2; /* Highlight color on focus */
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+        }
+
+        /* Login Button Styling */
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            background-color: #4a90e2; /* A nice blue for the button */
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .login-btn:hover {
+            background-color: #357abd; /* Darker blue on hover */
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h1>Login</h1>
+        <form action="/login" method="post">
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="you@example.com" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="login-btn">Sign In</button>
+        </form>
+    </div>
+
+</body>
+</html>

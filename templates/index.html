@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Somu's Personal Space</title>
+
+<!-- Optional Bootstrap for spacing & grid (no JS needed) -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+/* =========================
+   CORE THEME + LAYOUT
+========================= */
+:root{
+  --sidebar-w: 280px;
+  --sidebar-collapsed: 16px;
+
+  /* colors */
+  --text: #ffffffff;
+  --muted: rgba(255,255,255,0.8);
+  --glass: rgba(0,0,0,0.35);
+  --glass-strong: rgba(0,0,0,0.55);
+  --card-br: 18px;
+  --shadow: 0 12px 40px rgba(0,0,0,0.35);
+
+  /* season vars (default: summer) */
+  --bg-image: url('static/images/summer.jpg');
+  --accent: #ffe066;
+  --chip-bg: rgba(255,255,255,0.18);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial;overflow:hidden}
+
+/* Background image per season */
+.bg{
+  position:fixed; inset:0; z-index:-3;
+  background-image: var(--bg-image);
+  background-size:cover; background-position:center;
+  filter:saturate(1.05);
+  transition: background-image 600ms ease;
+}
+
+/* Effects container */
+#fx{
+  position:fixed; inset:0; z-index:-2; pointer-events:none;
+  overflow: hidden;
+}
+
+/* =========================
+   PURE CSS SEASONAL EFFECTS
+========================= */
+
+/* Hide all effects by default */
+.summer-effect,
+.winter-effect,
+.autumn-effect,
+.spring-effect {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+
+/* Summer - Sun rays (show only in summer) */
+body[data-theme="summer"] .summer-effect {
+  display: block;
+}
+
+.sun-ray {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 70%);
+  border-radius: 50%;
+  animation: float-down 8s infinite linear;
+}
+
+.sun-ray:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 12s; }
+.sun-ray:nth-child(2) { left: 20%; animation-delay: -2s; animation-duration: 10s; }
+.sun-ray:nth-child(3) { left: 30%; animation-delay: -4s; animation-duration: 14s; }
+.sun-ray:nth-child(4) { left: 40%; animation-delay: -1s; animation-duration: 11s; }
+.sun-ray:nth-child(5) { left: 50%; animation-delay: -3s; animation-duration: 9s; }
+.sun-ray:nth-child(6) { left: 60%; animation-delay: -5s; animation-duration: 13s; }
+.sun-ray:nth-child(7) { left: 70%; animation-delay: -2.5s; animation-duration: 15s; }
+.sun-ray:nth-child(8) { left: 80%; animation-delay: -1.5s; animation-duration: 8s; }
+.sun-ray:nth-child(9) { left: 90%; animation-delay: -4.5s; animation-duration: 12s; }
+.sun-ray:nth-child(10) { left: 15%; animation-delay: -6s; animation-duration: 10s; }
+
+@keyframes float-down {
+  0% { transform: translateY(-20px) translateX(0px); opacity: 0.3; }
+  50% { opacity: 0.8; }
+  100% { transform: translateY(100vh) translateX(10px); opacity: 0; }
+}
+
+/* Winter - Snow (show only in winter) */
+body[data-theme="winter"] .winter-effect {
+  display: block;
+}
+
+.snowflake {
+  position: absolute;
+  color: white;
+  font-size: 1.2em;
+  animation: snowfall 10s infinite linear;
+}
+
+.snowflake:nth-child(1) { left: 5%; animation-delay: 0s; animation-duration: 12s; }
+.snowflake:nth-child(2) { left: 15%; animation-delay: -2s; animation-duration: 8s; }
+.snowflake:nth-child(3) { left: 25%; animation-delay: -4s; animation-duration: 14s; }
+.snowflake:nth-child(4) { left: 35%; animation-delay: -1s; animation-duration: 10s; }
+.snowflake:nth-child(5) { left: 45%; animation-delay: -3s; animation-duration: 9s; }
+.snowflake:nth-child(6) { left: 55%; animation-delay: -5s; animation-duration: 13s; }
+.snowflake:nth-child(7) { left: 65%; animation-delay: -2.5s; animation-duration: 11s; }
+.snowflake:nth-child(8) { left: 75%; animation-delay: -1.5s; animation-duration: 15s; }
+.snowflake:nth-child(9) { left: 85%; animation-delay: -4.5s; animation-duration: 12s; }
+.snowflake:nth-child(10) { left: 95%; animation-delay: -6s; animation-duration: 8s; }
+.snowflake:nth-child(11) { left: 10%; animation-delay: -7s; animation-duration: 10s; }
+.snowflake:nth-child(12) { left: 20%; animation-delay: -8s; animation-duration: 14s; }
+
+@keyframes snowfall {
+  0% { transform: translateY(-20px) translateX(0px) rotate(0deg); opacity: 0.8; }
+  50% { transform: translateY(50vh) translateX(20px) rotate(180deg); }
+  100% { transform: translateY(100vh) translateX(-10px) rotate(360deg); opacity: 0; }
+}
+
+/* Autumn - Leaves (show only in autumn) */
+body[data-theme="autumn"] .autumn-effect {
+  display: block;
+}
+
+.leaf {
+  position: absolute;
+  width: 12px;
+  height: 6px;
+  border-radius: 50% 10% 50% 10%;
+  animation: leaffall 12s infinite linear;
+}
+
+.leaf:nth-child(1) { left: 8%; animation-delay: 0s; animation-duration: 15s; background: #ff6b35; }
+.leaf:nth-child(2) { left: 18%; animation-delay: -2s; animation-duration: 12s; background: #f7931e; }
+.leaf:nth-child(3) { left: 28%; animation-delay: -4s; animation-duration: 18s; background: #ffcc02; }
+.leaf:nth-child(4) { left: 38%; animation-delay: -1s; animation-duration: 14s; background: #ff8c42; }
+.leaf:nth-child(5) { left: 48%; animation-delay: -3s; animation-duration: 10s; background: #ff6b35; }
+.leaf:nth-child(6) { left: 58%; animation-delay: -5s; animation-duration: 16s; background: #f7931e; }
+.leaf:nth-child(7) { left: 68%; animation-delay: -2.5s; animation-duration: 13s; background: #ffcc02; }
+.leaf:nth-child(8) { left: 78%; animation-delay: -1.5s; animation-duration: 11s; background: #ff8c42; }
+.leaf:nth-child(9) { left: 88%; animation-delay: -4.5s; animation-duration: 17s; background: #ff6b35; }
+.leaf:nth-child(10) { left: 12%; animation-delay: -6s; animation-duration: 9s; background: #f7931e; }
+
+@keyframes leaffall {
+  0% { 
+    transform: translateY(-20px) translateX(0px) rotate(0deg); 
+    opacity: 0.8; 
+  }
+  25% { 
+    transform: translateY(25vh) translateX(30px) rotate(90deg); 
+  }
+  50% { 
+    transform: translateY(50vh) translateX(-20px) rotate(180deg); 
+  }
+  75% { 
+    transform: translateY(75vh) translateX(40px) rotate(270deg); 
+  }
+  100% { 
+    transform: translateY(100vh) translateX(-30px) rotate(360deg); 
+    opacity: 0; 
+  }
+}
+
+/* Spring - Pink Petals (show only in spring) */
+body[data-theme="spring"] .spring-effect {
+  display: block;
+}
+
+.petal {
+  position: absolute;
+  width: 10px;
+  height: 6px;
+  background: rgba(255, 112, 133, 1);
+  border-radius: 50% 10% 50% 10%;
+  animation: petalfall 4s infinite linear;
+}
+
+.petal:nth-child(1) { left: 7%; animation-delay: 0s; animation-duration: 16s; }
+.petal:nth-child(2) { left: 17%; animation-delay: -2s; animation-duration: 13s; }
+.petal:nth-child(3) { left: 27%; animation-delay: -4s; animation-duration: 19s; }
+.petal:nth-child(4) { left: 37%; animation-delay: -1s; animation-duration: 15s; }
+.petal:nth-child(5) { left: 47%; animation-delay: -3s; animation-duration: 11s; }
+.petal:nth-child(6) { left: 57%; animation-delay: -5s; animation-duration: 17s; }
+.petal:nth-child(7) { left: 67%; animation-delay: -2.5s; animation-duration: 14s; }
+.petal:nth-child(8) { left: 77%; animation-delay: -1.5s; animation-duration: 12s; }
+.petal:nth-child(9) { left: 87%; animation-delay: -4.5s; animation-duration: 18s; }
+.petal:nth-child(10) { left: 13%; animation-delay: -6s; animation-duration: 10s; }
+
+@keyframes petalfall {
+  0% { 
+    transform: translateY(-20px) translateX(0px) rotate(0deg); 
+    opacity: 0.9; 
+  }
+  30% { 
+    transform: translateY(30vh) translateX(25px) rotate(120deg); 
+  }
+  60% { 
+    transform: translateY(60vh) translateX(-15px) rotate(240deg); 
+  }
+  100% { 
+    transform: translateY(100vh) translateX(20px) rotate(360deg); 
+    opacity: 0; 
+  }
+}
+
+/* Invisible Sidebar */
+.sidebar-wrap{ position:fixed; left:0; top:0; height:100%; width:var(--sidebar-collapsed); z-index:50; transition:width .35s ease }
+.sidebar{
+  position:absolute; inset:0 0 0 0; width:var(--sidebar-w);
+  transform: translateX(calc(-1 * (var(--sidebar-w) - var(--sidebar-collapsed))));
+  transition: transform .35s ease, background .35s ease, border-color .35s ease;
+  background: var(--glass-strong); backdrop-filter: blur(10px);
+  border-right: 1px solid rgba(255,255,255,0.18);
+  box-shadow: var(--shadow);
+  padding: 18px;
+  display:flex; flex-direction:column; gap:10px;
+}
+.sidebar-wrap:hover{ width:var(--sidebar-w) }
+.sidebar-wrap:hover .sidebar{ transform: translateX(0) }
+
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.brand .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
+.brand span{font-weight:700}
+
+.side-links a{
+  display:block; text-decoration:none; color:#fff;
+  padding:10px 12px; border-radius:12px; margin:4px 0;
+  background: transparent; transition: background .25s ease, transform .2s ease;
+}
+.side-links a:hover{ background: rgba(255,255,255,0.15); transform: translateX(4px) }
+.logout{
+  margin-top:auto;
+  background:#ff4d6d; border:none; color:#fff; padding:12px; border-radius:12px; font-weight:700;
+}
+
+/* App container (leaves space for collapsed sidebar) */
+.app{ position:fixed; inset:0 0 0 var(--sidebar-collapsed); display:flex; flex-direction:column }
+
+/* Header (profile + themes) */
+.header{
+  padding:28px 16px 10px;
+  display:flex; align-items:center; justify-content:center; flex-direction:column; gap:12px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.55), rgba(0,0,0,0.25), rgba(0,0,0,0));
+}
+.profile{
+  display:flex; flex-direction:column; align-items:center; gap:10px;
+}
+.profile img{ width:84px; height:84px; border-radius:50%; border:0.5px solid rgba(255,255,255,0.7) }
+.profile .hello{ font-weight:800; font-size:1.8rem; text-shadow: 0 6px 20px rgba(0,0,0,0.55) }
+.chips{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center }
+.chips label{
+  user-select:none; cursor:pointer; font-weight:700;
+  padding:8px 14px; border-radius:999px; background:var(--chip-bg); backdrop-filter: blur(6px);
+  border:1px solid rgba(255,255,255,0.25);
+  transition: outline 0.3s ease;
+}
+.theme-input{ display:none }
+.theme-input:checked + label{ outline:2px solid #fff }
+
+/* Nav tiles row (home) */
+.tiles{
+  display:grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap:18px;
+  width:min(1100px,92%); margin:18px auto 22px;
+}
+@media (max-width:1100px){ .tiles{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:640px){ .tiles{grid-template-columns:1fr} }
+
+.tile{
+  text-decoration:none; color:#fff;
+  background: var(--glass); border:1px solid rgba(255,255,255,0.18);
+  padding:24px; border-radius:24px; box-shadow: var(--shadow);
+  display:flex; flex-direction:column; align-items:flex-start; gap:8px;
+  transition: transform .25s ease, background .25s ease, border-color .25s ease;
+}
+.tile h3{ margin:0; font-weight:800; letter-spacing:.2px }
+.tile p{ margin:0; color:var(--muted) }
+.tile:hover{ transform: translateY(-4px); background: rgba(0,0,0,0.45); border-color: rgba(255,255,255,0.28) }
+
+/* Screens (full page) */
+main{ position:relative; flex:1; overflow:hidden }
+.screen{
+  position:absolute; inset:0; overflow:auto; padding:22px;
+  opacity:0; pointer-events:none; transform: translateY(10px);
+  transition: opacity .35s ease, transform .35s ease;
+}
+.screen:target{ opacity:1; pointer-events:auto; transform:none }
+
+/* Default empty screen visible when no target OR when #default is targeted */
+#default:target,
+body:not(:target) #default {
+  opacity:1;
+  pointer-events:auto;
+  transform:none;
+}
+
+/* Cards & grids inside screens */
+.card{
+  background: var(--glass); border:1px solid rgba(170, 161, 161, 0.21);
+  border-radius: 20px; box-shadow: var(--shadow); padding:18px;
+}
+.media-grid{ display:grid; gap:12px; grid-template-columns:repeat(4,minmax(0,1fr)) }
+@media (max-width:1100px){ .media-grid{grid-template-columns:repeat(3,1fr)} }
+@media (max-width:800px){ .media-grid{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:520px){ .media-grid{grid-template-columns:1fr} }
+.media{ position:relative; border-radius:14px; overflow:hidden; border:1px solid rgba(255,255,255,0.18) }
+.media img,.media video{ width:100%; height:190px; object-fit:cover; display:block }
+.media .act{ position:absolute; right:8px; top:8px; display:flex; gap:6px }
+.btn-glass{
+  border:none; border-radius:10px; padding:8px 12px; font-weight:700; color:#0b1220; background:#c7f9ff;
+}
+.btn-danger{ background:#ffadad; border:none; border-radius:10px; padding:8px 12px; font-weight:700; color:#0b1220 }
+.btn-alt{ background:#ffd6a5; border:none; border-radius:10px; padding:8px 12px; font-weight:700; color:#0b1220 }
+
+.list{ display:grid; gap:10px }
+.rowx{
+  display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+}
+.item{
+  background: rgba(121, 108, 108, 0.43); border:1px solid rgba(58, 48, 48, 0.25);
+  padding:10px 12px; border-radius:12px; display:flex; align-items:center; justify-content:space-between; gap:10px;
+}
+.pill{ padding:6px 10px; border-radius:999px; background: rgba(255,255,255,0.2) }
+.input, textarea{ width:100%; background: rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.22); color:#fff; border-radius:12px; padding:10px }
+
+/* Overview grids */
+.overgrid{
+  display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px
+}
+@media (max-width:900px){ .overgrid{grid-template-columns:1fr} }
+.memories{ display:grid; gap:12px; grid-template-columns:repeat(3,1fr) }
+.memories img{ width:100%; height:120px; object-fit:cover; border-radius:12px; border:1px solid rgba(255,255,255,0.18) }
+.tasks ul{ list-style:none; margin:0; padding:0; display:grid; gap:8px }
+.tasks li{ display:flex; align-items:center; justify-content:space-between; padding:10px 12px; background: rgba(0,0,0,0.28); border:1px solid rgba(255,255,255,0.18); border-radius:12px }
+
+/* Footer (transparent) */
+.footer{
+  padding:10px 16px; display:flex; justify-content:center; align-items:center;
+  color:var(--muted); background: transparent; text-shadow: 0 4px 16px rgba(0,0,0,0.5)
+}
+
+footer strong {
+    margin: 0 4px;
+    color: rgba(227, 32, 220, 1)
+}
+
+/* =========================
+   SEASON THEME SWITCH (CSS)
+========================= */
+body[data-theme="summer"]{ --bg-image: url('static/images/summer.jpg'); --accent:#ffe066 }
+body[data-theme="winter"]{ --bg-image: url('static/images/winter.jpeg'); --accent:#86e7ff }
+body[data-theme="autumn"]{ --bg-image: url('static/images/autumn.jpg'); --accent:#ffb26b }
+body[data-theme="spring"]{ --bg-image: url('static/images/spring.png'); --accent:#ffd6e7 }
+
+/* make room under header when a screen is open (full-page look) */
+.screen > .container{ max-width:1100px }
+
+.highlight {
+  color: rgba(255, 255, 255, 1);
+}
+
+
+
+/* === To-Do Card === */
+
+.todo-card {
+  background: var(--glass);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: var(--text);
+}
+
+.todo-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.todo-desc {
+  font-size: 0.92rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+.todo-status {
+  align-self: flex-start;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: rgba(255,255,255,0.18);
+}
+
+.todo-actions {
+  margin-top: 6px;
+  display: flex;
+  gap: 10px;
+}
+
+.todo-btn {
+  flex: 1;
+  padding: 10px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .15s ease;
+}
+
+.todo-btn:active { transform: translateY(1px); }
+
+.todo-btn.edit {
+  background: #86e7ff33;
+  color: #86e7ff;
+}
+
+.todo-btn.delete {
+  background: #ff4d6d33;
+  color: #ff4d6d;
+}
+
+
+/*notes*/
+
+#notes h5 {
+    text-align: center;   
+    color: white;         
+}
+
+.list .item {
+    color: white;
+}
+.card-actions {
+  display: flex; 
+  align-items: center; 
+  gap: 15px;
+  
+}
+
+.card-actions form {
+  margin: 0;
+  
+}
+.card-title {
+  color: #ffffff; 
+}
+.card-time{
+  color: #fff;
+}
+
+.download{
+  height: 2px;
+  width: 2px
+}
+
+/*files*/
+
+.item span {
+  background-color: transparent;
+  color: #ffffff;            
+}
+.list :hover{
+  background-color: #917a7a41;
+}
+
+p{
+  color: #ffffff; 
+}
+
+h5{
+  color: #ffffff; 
+}
+span{
+  color: #ffffff;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.menu {
+  flex: 1; /* pushes logout down */
+}
+
+.logout {
+  margin-top: auto;
+  padding: 1rem;
+  background-color: transparent;
+}
+
+</style>
+
+<script>
+// Minimal JavaScript only for theme switching
+document.addEventListener('DOMContentLoaded', function() {
+  const themeInputs = document.querySelectorAll('input[name="theme"]');
+  
+  themeInputs.forEach(input => {
+    input.addEventListener('change', function() {
+      if (this.checked) {
+        document.body.setAttribute('data-theme', this.value);
+      }
+    });
+  });
+});
+</script>
+
+</head>
+<body data-theme="summer">
+
+<!-- Background & effect -->
+<div class="bg" id="bg"></div>
+<div id="fx">
+  <!--Summer Effects--> 
+  <div class="summer-effect">
+    <div class="sun-ray"></div>
+    <div class="sun-ray"></div>
+    <div class="sun-ray"></div>
+    <div class="sun-ray"></div>
+    <div class="sun-ray"></div>
+    <div class="sun-ray"></div>
+    <div class="sun-ray"></div>
+    <div class="sun-ray"></div>
+    <div class="sun-ray"></div>
+    <div class="sun-ray"></div>
+  </div>
+
+  <!-- Winter Effects -->
+  <div class="winter-effect">
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❅</div>
+    <div class="snowflake">❆</div>
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❅</div>
+    <div class="snowflake">❆</div>
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❅</div>
+    <div class="snowflake">❆</div>
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❅</div>
+    <div class="snowflake">❆</div>
+  </div>
+
+  <!-- Autumn Effects -->
+  <div class="autumn-effect">
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+  </div>
+
+  <!-- Spring Effects -->
+  <div class="spring-effect">
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+  </div>
+</div>
+
+
+{% set user_name = "SOMU" %}
+
+
+<!-- Sidebar (hover to reveal) -->
+<div class="sidebar-wrap">
+  <aside class="sidebar">
+    <div class="brand"><span class="dot"></span><span>{{user_name}}'s Space</span></div>
+    <nav class="side-links">
+      
+      <a href="#default">🏠 HOME</a>
+      <a href="#overview">🌟 OVERVIEW</a>
+      <a href="#images">📷 PHOTOS</a>
+      <!--<a href="#videos">🎬 Videos</a>-->
+      <a href="#files">📂 FILES</a>
+      <a href="#notes">📝 DAIRY</a>
+      <a href="#todo">✅ TO-DO</a>
+      
+    </nav>
+    <div class="logout">
+    <a href="#logout-screen"><button class="btn btn-danger">LOGOUT</button></a>
+    </div>
+  </aside>
+</div>
+
+<!-- App -->
+<div class="app">
+  <!-- HEADER (profile + theme chips same on every section) -->
+  <header class="header">
+    <div class="profile">
+      <img src="static/icons/avatar-.png" alt="Somu">
+      
+      <div class="hello">Hello, {{user_name}} <span style="filter:drop-shadow(0 7px 16px rgba(0,0,0,.5))">👋</span></div>
+    </div>
+
+    <!-- theme chips: CSS switches background -->
+    <div class="chips">
+      <input id="th-summer" class="theme-input" type="radio" name="theme" value="summer" checked>
+      <label for="th-summer">☀️ Summer</label>
+
+      <input id="th-winter" class="theme-input" type="radio" name="theme" value="winter">
+      <label for="th-winter">❄️ Winter</label>
+
+      <input id="th-autumn" class="theme-input" type="radio" name="theme" value="autumn">
+      <label for="th-autumn">🍂 Autumn</label>
+
+      <input id="th-spring" class="theme-input" type="radio" name="theme" value="spring">
+      <label for="th-spring">🌸 Spring</label>
+    </div>
+  </header>
+
+  <main>
+    <!-- DEFAULT EMPTY SCREEN -->
+    <section id="default" class="screen">
+      <div class="container"></div>
+    </section>
+
+    <!-- OVERVIEW -->
+    <section id="overview" class="screen">
+      <div class="container">
+        <div class="overgrid">
+          <div class="card">
+            <h5 class="mb-3">💖 Memories</h5>
+            <div class="memories">
+              {% if overview %}
+                {% for img in overview%}
+                  <img src="{{ img.url or '/static/images/placeholder.jpg' }}" alt="{{ img.name }}">
+                {% endfor %}
+              {% else %}
+                <p class="text-muted">No Memories Yet!!.</p>
+              {% endif %}
+            </div>
+          </div> 
+          <div class="card tasks">
+          <h5 class="mb-3">📌 Pending To-Dos</h5>        
+            {% if tasks %}
+            {% for task in tasks %}
+            {% if task.status == "pending" %}
+            <ul>
+              <li>
+                <span>{{task.title}}</span>
+                <span class="pill">{{task.status}}</span>
+              </li>
+            </ul>
+            {% endif %}
+            {% endfor %}
+            {% else %}
+              <p class="text-muted">Add Tasks To View Here..</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHOTOS -->
+<section id="images" class="screen">
+  <div class="container">
+    <div class="card">
+      <h5 class="mb-3">🖼️ PHOTOS</h5>
+      <div class="rowx mb-2">
+        <form action="/upload_img" method="post" enctype="multipart/form-data">
+          <input class="input" type="file" name="photos" accept="image/*" multiple>
+          <button class="btn-glass" type="submit">Upload Image</button>
+        </form>
+      </div>
+      <div class="media-grid">
+        {% if images %}
+          {% for img in images %}
+            <div class="media">
+              <img src="{{ img.url or '/static/images/placeholder.jpg' }}" 
+                   alt="{{ img.name }}" 
+                   style="width:100%; height:190px; object-fit:cover;">
+              <div class="act">
+                <a href="/download_img/{{ img.name }}" class="btn btn-outline-dark"><img src="static/icons/download-.png", alt="download", style="width: 30px; height: 30px;"></a>
+                <form action="/delete_img/{{ img.name }}" method="post" style="display:inline;">
+                  <button type="submit"class="btn btn-outline-danger"><img src="static/icons/bin.png", alt="download", style="width: 30px; height: 30px;"></button>
+                </form>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <p class="text-muted">No Images Uploaded.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+    <!-- VIDEOS -->
+    <!--<section id="videos" class="screen">
+      <div class="container">
+        <div class="card">
+          <h5 class="mb-3">🎬 Videos</h5>
+          <div class="rowx mb-2">
+            <input class="input" type="file" accept="video/*" multiple>
+            <button class="btn-glass">Upload Video(s)</button>
+          </div>
+          <div class="media-grid">
+            
+            {% if videos %}
+                {% for vid in videos %}
+                  <img src="{{ vid.url or '/static/images/placeholder.jpg' }}" alt="{{ img.name }}">
+                {% endfor %}
+              {% else %}
+                <p class="text-muted">No Memories Yet!!.</p>
+              {% endif %}
+          </div>
+        </div>
+      </div>
+    </section> -->
+
+    <!-- FILES -->
+    <!-- FILES -->
+    <section id="files" class="screen">
+      <div class="container">
+        <div class="card">
+          <h5 class="mb-3">📂 FILES</h5>
+          <div class="rowx mb-2">
+            <form action="/uploadfiles" method="post" enctype="multipart/form-data">
+              <input class="input" type="file" name="files" multiple>
+              <p>Upload File < 50MB</p>
+              <button class="btn-glass" type="submit">Upload File(s)</button>
+            </form>
+          </div>
+          <div class="list">
+            {% if files %}
+              {% for f in files %}
+                <div class="item">
+                  <span>{{ f.name }}</span>
+                  <div>
+                    <a href="/download/{{ f.name }}" class="btn btn-outline-dark"><img src="static/icons/download-.png", alt="download", style="width: 30px; height: 30px;"></a>
+                    <form action="/delete/{{ f.name }}" method="post" style="display:inline;">
+                      <button class="btn btn-outline-danger"><img src="static/icons/bin.png", alt="download", style="width: 30px; height: 30px;"></button>
+                    </form>
+                  </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              <p class="text-muted">No Files Here.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+
+
+    <!-- NOTES -->
+    <section id="notes" class="screen">
+      <div class="container">
+        <div class="card">
+          <h5 class="mb-3">📝 DAIRY</h5>
+          <h5>Tell What Happened Today!</h5>
+          <div class="d-flex justify-content-center">
+            <a href="/notes"><button class="btn btn-primary btn-glass">Write Here...</button></a><br>
+            <br>
+          </div>
+          <div class="list">
+            <!-- Sample notes -->
+             {%if notes %} 
+              {% for note in notes%}
+                <div class="diary-card">
+                <div class="card-header">
+                    <h3 class="card-title">{{note.title}}</h3>
+                    <p class="card-time">{{note.time}}</p>
+                </div>
+                <div class="card-actions">
+                    <a href="/editnotes/{{note.id}}"><button class="btn btn-secondary">Edit</button></a>                
+                    <form method="post" action="/delnotes/{{ note.id }}">
+                      <button class="btn btn-outline-danger"><img src="static/icons/bin.png", alt="download", style="width: 30px; height: 30px;"></button>
+                    </form>
+                </div>
+                <hr>
+                </div>
+              {% endfor %}
+            {% else %}
+              <p class="text-muted">No Dairies Yet.</p>
+            {% endif%}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TO-DO -->
+    <section id="todo" class="screen">
+      <div class="container">
+        <h4 class="mb-3">✅ TO-DO</h4>
+        <div class="rowx mb-2">
+          <a href="/newtask"><button class="btn-glass">Add Task</button></a>
+        </div>
+      {% if tasks %}
+    {% for task in tasks %}
+    <div class="todo-card mb-3">
+      <h5 class="todo-title">{{ task.title }}</h5>
+      <p class="todo-desc">{{ task.description }}</p>
+      <span class="todo-status">{{ task.status }}</span>
+      <div class="todo-actions">
+        <a href="/edittask/{{ task.id }}"><button class="todo-btn edit">Edit</button></a>
+        <form method="post" action="/deltask/{{ task.id }}">
+            <button class="btn btn-outline-danger"><img src="static/icons/bin.png", alt="download", style="width: 30px; height: 30px;"></button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <p class="text-muted">No Tasks Yet. Add Some Tasks Above!</p>
+{% endif %}
+
+      </div>
+    </section>
+
+
+
+
+    <!-- LOGOUT SCREEN -->
+    <section id="logout-screen" class="screen">
+      <div class="container">
+        <div class="card text-center">
+          <h5 class="mb-3">Ready To Leave..?</h5>
+          <p class="mb-3">You Can Always Come Back, {{user_name}} 💖</p>
+          <a href="/logout"><button class="btn btn-outline-danger">LOGOUT</button></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">Made with 💙 by <strong>LILA</strong> for <strong>SOMU</strong></footer>
+</div>
+
+</body>
+</html>

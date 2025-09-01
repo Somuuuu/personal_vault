@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Note</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #f4f7f9;
+      --text-color: #1a1a1a;
+      --card-bg: #ffffff;
+      --editor-bg: #f1f1f1;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+      --border-color: #e4e4e4;
+      --accent-color: #6d5edc;
+    }
+    body.dark-mode {
+      --bg-color: #1a1a1a;
+      --text-color: #f4f7f9;
+      --card-bg: #2a2a2a;
+      --editor-bg: #333333;
+      --shadow-color: rgba(0, 0, 0, 0.5);
+      --border-color: #444;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+    }
+    
+    .page-header {
+        padding: 20px;
+        /* Line under header is removed */
+    }
+    
+    .page-header h1 {
+        margin: 0;
+        font-size: 1.8rem;
+    }
+    
+    .content-area {
+        position: relative;
+        padding: 20px;
+    }
+
+    .dashboard-btn {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background-color: var(--accent-color);
+        color: white;
+        border: none;
+        padding: 12px 22px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        text-decoration: none;
+        transition: background-color 0.2s;
+        white-space: nowrap;
+    }
+    
+    .writer-container {
+      margin: 0 auto;
+      width: 100%;
+      max-width: 470px;
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 12px 24px var(--shadow-color);
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .dashboard-btn:hover {
+        background-color: #5548b1;
+    }
+
+    .writer-header {
+      padding: 15px 25px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .toolbar button {
+      background: none;
+      border: none;
+      color: var(--text-color);
+      cursor: pointer;
+      font-size: 18px;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      transition: background-color 0.2s;
+    }
+    .toolbar button:hover {
+      background-color: var(--accent-color);
+      color: white;
+    }
+
+    #theme-toggle {
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    #entry-title {
+      width: 100%;
+      border: none;
+      background: transparent;
+      padding: 20px 30px 10px;
+      font-size: 28px;
+      font-weight: bold;
+      font-family: 'Inter', sans-serif;
+      color: var(--text-color);
+      box-sizing: border-box;
+      outline: none;
+    }
+
+    #editor {
+      padding: 20px 30px 30px;
+      min-height: 290px; /* <--- THIS IS THE FIX. I made the editor height smaller. */
+      font-family: 'Lora', serif;
+      font-size: 18px;
+      line-height: 1.7;
+      outline: none;
+      background-color: var(--editor-bg);
+      border: none;
+      border-radius: 0 0 16px 16px;
+      overflow-y: auto;
+    }
+
+    .writer-footer {
+      padding: 10px 25px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #stats {
+      font-size: 14px;
+      color: #888;
+    }
+
+    #save-btn {
+      background-color: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.2s;
+    }
+    #save-btn:hover {
+      background-color: #5548b1;
+    }
+  </style>
+</head>
+<body class="dark-mode">
+
+<header class="page-header">
+    {% set user_name = "SOMU" %}
+    <h1>Hello {{user_name}} 👋</h1>
+</header>
+
+<main class="content-area">
+    <a href="/dashboard#notes" class="dashboard-btn">⬅️</a>
+
+<form action="/notes" method="post">
+    <div class="writer-container">
+        <div class="writer-header">
+            <div class="toolbar">
+                <button type="button" onclick="formatDoc('bold');"><b>B</b></button>
+                <button type="button" onclick="formatDoc('italic');"><i>I</i></button>
+                <button type="button" onclick="formatDoc('underline');"><u>U</u></button>
+                <button type="button" onclick="formatDoc('insertUnorderedList');">●</button>
+                <button type="button" onclick="formatDoc('insertOrderedList');">1.</button>
+            </div>
+            <div id="theme-toggle" title="Toggle Theme">🌓</div>
+        </div>
+        
+        <input type="text" id="entry-title" name="title" placeholder="Your Title Here...">
+
+       <!-- Rich text editor -->
+        <div id="editor" contenteditable="true"></div>
+        <!-- Hidden textarea to send HTML content -->
+        <textarea id="editor-hidden" name="info" style="display:none;"></textarea>
+
+      <div class="writer-footer">
+        <div id="stats">
+          <span id="word-count">0 Words</span> | <span id="char-count">0 Characters</span>
+        </div>
+        <button id="save-btn" type="submit">Save</button>
+      </div>
+    </form>
+</main>
+
+<script>
+  // Toolbar formatting
+  function formatDoc(command) {
+    document.execCommand(command, false, null);
+  }
+
+  const editor = document.getElementById('editor');
+  const wordCountSpan = document.getElementById('word-count');
+  const charCountSpan = document.getElementById('char-count');
+
+  // Word & character count
+  editor.addEventListener('input', () => {
+    const text = editor.innerText;
+    charCountSpan.textContent = `${text.length} Characters`;
+    const words = text.trim().split(/\s+/).filter(word => word.length > 0);
+    wordCountSpan.textContent = `${words.length} Words`;
+  });
+
+  // Theme toggle
+  const themeToggle = document.getElementById('theme-toggle');
+  themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    if (document.body.classList.contains('dark-mode')) {
+      themeToggle.textContent = '🌓';
+      themeToggle.title = 'Switch to Light Mode';
+    } else {
+      themeToggle.textContent = '☀️';
+      themeToggle.title = 'Switch to Dark Mode';
+    }
+  });
+
+  // Copy editor content into hidden textarea before submit
+  const form = document.querySelector("form");
+  form.addEventListener("submit", () => {
+    document.getElementById("editor-hidden").value = editor.innerHTML;
+  });
+</script>
+</body>
+</html>
